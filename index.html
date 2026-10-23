@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTRANET & POINTEUSE — SASP SUD</title>
+    <style>
+        :root {
+            --bg-dark: #0b0e14;
+            --card-bg: #151922;
+            --card-header: #1d222e;
+            --accent-gold: #e5b842;
+            --accent-blue: #2563eb;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #262e3d;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* HEADER OFFICIEL SASP SUD */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-left img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .badge-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-off { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); }
+        .status-on { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
+        .status-pause { background: rgba(245, 158, 11, 0.2); color: var(--orange); border: 1px solid var(--orange); }
+
+        /* NAVIGATION ONGLETS */
+        .nav-tabs {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        .tab-btn.em-tab.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+        }
+
+        /* CONTENU */
+        .tab-content {
+            width: 100%;
+            max-width: 1100px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--card-header);
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px 14px;
+            background: #0b0e14;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 800;
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button.btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        button.btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        button.btn:active { transform: translateY(0); }
+
+        .btn-green { background: var(--green); color: #fff; }
+        .btn-orange { background: var(--orange); color: #fff; }
+        .btn-red { background: var(--red); color: #fff; }
+        .btn-blue { background: var(--accent-blue); color: #fff; }
+        .btn-gold { background: var(--accent-gold); color: #000; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #0f121a;
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .em-login-box {
+            max-width: 400px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .em-login-box img {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #0f121a;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER OFFICIEL SASP SUD -->
+    <header>
+        <div class="header-left">
+            <img src="logo.png" alt="Insigne SASP Sud" onerror="this.onerror=null; this.src='https://i.ibb.co/6y40F11/fCT1-Njz-400x400.png';">
+            <div class="header-title">
+                <h1>SAN ANDREAS STATE POLICE</h1>
+                <p>DEPARTEMENT DU SUD — POSTE CENTRAL</p>
+            </div>
+        </div>
+        <div>
+            <span id="global-badge" class="badge-status status-off">HORS SERVICE (10-10)</span>
+        </div>
+    </header>
+
+    <!-- ONGLETS -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('agent-tab')">👮 Espace Agent / Pointeuse</button>
+        <button class="tab-btn" onclick="switchTab('history-tab')">📜 Mon Historique Personnel</button>
+        <button class="tab-btn em-tab" onclick="switchTab('em-tab')">🔒 Accès État-Major</button>
+    </div>
+
+    <!-- 1. ESPACE AGENT -->
+    <div id="agent-tab" class="tab-content active">
+        <div class="grid-container">
+            
+            <div class="card">
+                <div class="card-header">👤 Identification Officier</div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="agent-name">Nom & Prénom RP</label>
+                        <input type="text" id="agent-name" placeholder="Ex: John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-matricule">Matricule</label>
+                        <input type="text" id="agent-matricule" placeholder="Ex: 201">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-grade">Grade</label>
+                        <select id="agent-grade">
+                            <option value="Chief">Chief</option>
+                            <option value="Assistant Chief">Assistant Chief</option>
+                            <option value="Captain">Captain</option>
+                            <option value="Lieutenant">Lieutenant</option>
+                            <option value="Sergent Chef">Sergent Chef</option>
+                            <option value="Sergent">Sergent</option>
+                            <option value="Senior Lead Officer">Senior Lead Officer</option>
+                            <option value="Officer III">Officer III</option>
+                            <option value="Officer II">Officer II</option>
+                            <option value="Officer I">Officer I</option>
+                            <option value="Rookie">Rookie</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🚓 Configuration de Patrouille</div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="unit-type">Indicatif Unité</label>
+                        <select id="unit-type">
+                            <option value="ADAM">ADAM (Patrouille Terrestre)</option>
+                            <option value="LINCOLN">LINCOLN (Patrouille Solo)</option>
+                            <option value="MARY">MARY (Unité Moto)</option>
+                            <option value="HENRY">HENRY (Unité Aérienne)</option>
+                            <option value="TANGO">TANGO (Unité Spéciale)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit-partner">Coéquipier(s)</label>
+                        <input type="text" id="unit-partner" placeholder="Ex: Jane Doe (202) / Aucun">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-notes">Notes de Patrouille</label>
+                        <input type="text" id="service-notes" placeholder="Ex: Patrouille Secteur Sud / Contrôles">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">⏱️ Horodateur de Service En Direct</div>
+                <div class="card-body">
+                    <div class="timer-display" id="main-timer">00:00:00</div>
+                    <div class="btn-group">
+                        <button class="btn btn-green" onclick="startService()">Prise de Service (10-8)</button>
+                        <button class="btn btn-orange" onclick="pauseService()">Pause (10-6)</button>
+                        <button class="btn btn-red" onclick="stopService()">Fin de Service (10-10)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">📋 Export Rapport Discord</div>
+                <div class="card-body">
+                    <button class="btn btn-blue" style="width: 100%; margin-bottom: 12px;" onclick="generateDiscordReport()">Générer le Compte-Rendu Automatique</button>
+                    <textarea id="discord-output" rows="6" readonly placeholder="Cliquez sur le bouton ci-dessus pour générer votre message prêt à être copié sur Discord..."></textarea>
+                    <button class="btn btn-gold" style="width: 100%; margin-top: 10px;" onclick="copyDiscordReport()">📋 Copier dans le Presse-Papier</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. HISTORIQUE PERSONNEL AGENT -->
+    <div id="history-tab" class="tab-content">
+        <div class="card full-width">
+            <div class="card-header">📜 Historique Personnel des Prises de Service</div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Agent / Matricule</th>
+                            <th>Unité</th>
+                            <th>Début</th>
+                            <th>Fin</th>
+                            <th>Durée Totale</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agent-history-tbody">
+                        <!-- Rempli dynamiquement en JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ESPACE ÉTAT-MAJOR (CODE: 1904) -->
+    <div id="em-tab" class="tab-content">
+        
+        <!-- CONNEXION EM -->
+        <div id="em-login-view" class="card em-login-box">
+            <div class="card-header" style="justify-content: center;">🔒 Accès Sécurisé Commandement</div>
+            <div class="card-body">
+                <img src="logo.png" alt="Insigne SASP Sud" onerror="this.onerror=null; this.src='https://i.ibb.co/6y40F11/fCT1-Njz-400x400.png';">
+                <div class="form-group">
+                    <label for="em-pass">Mot de Passe État-Major</label>
+                    <input type="password" id="em-pass" placeholder="">
+                </div>
+                <button class="btn btn-gold" style="width: 100%;" onclick="checkEmPassword()">Se Connecter</button>
+                <p id="em-login-error" style="color: var(--red); font-size: 12px; margin-top: 10px; display: none;">Mot de passe incorrect.</p>
+            </div>
+        </div>
+
+        <!-- TABLEAU DE BORD EM -->
+        <div id="em-dashboard-view" style="display: none;">
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div>Prises de Service Enregistrées</div>
+                    <div class="value" id="stat-total-shifts">0</div>
+                </div>
+                <div class="stat-card">
+                    <div>Heures Totales de Service</div>
+                    <div class="value" id="stat-total-hours">0h 00m</div>
+                </div>
+                <div class="stat-card">
+                    <div>Agents Actifs Différents</div>
+                    <div class="value" id="stat-total-agents">0</div>
+                </div>
+            </div>
+
+            <div class="card full-width" style="margin-bottom: 20px;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <span>🔎 Filtres d'Analyse & Gestion des Heures (SASP SUD)</span>
+                    <button class="btn btn-red" style="padding: 4px 10px; font-size: 11px;" onclick="logoutEm()">Déconnexion EM</button>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <input type="text" id="filter-agent" placeholder="Filtrer par Nom ou Matricule..." onkeyup="renderEmTable()">
+                        <select id="filter-unit" onchange="renderEmTable()">
+                            <option value="ALL">Toutes les Unités</option>
+                            <option value="ADAM">ADAM</option>
+                            <option value="LINCOLN">LINCOLN</option>
+                            <option value="MARY">MARY</option>
+                            <option value="HENRY">HENRY</option>
+                            <option value="TANGO">TANGO</option>
+                        </select>
+                        <button class="btn btn-green" onclick="exportCSV()">📥 Exporter en CSV (Excel)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">📊 HISTORIQUE GLOBAL DE SERVICE — ÉTAT-MAJOR SASP SUD</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Agent (Matricule)</th>
+                                <th>Grade</th>
+                                <th>Unité</th>
+                                <th>Début - Fin</th>
+                                <th>Durée Totale</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="em-history-tbody">
+                            <!-- Rempli en JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let timerInterval = null;
+        let seconds = 0;
+        let isRunning = false;
+        let startTime = null;
+
+        function getShifts() {
+            return JSON.parse(localStorage.getItem('sasp_sud_shifts') || '[]');
+        }
+
+        function saveShift(shift) {
+            const shifts = getShifts();
+            shifts.unshift(shift);
+            localStorage.setItem('sasp_sud_shifts', JSON.stringify(shifts));
+        }
+
+        function deleteShift(index) {
+            if (confirm("Voulez-vous vraiment supprimer cet enregistrement de l'historique ?")) {
+                const shifts = getShifts();
+                shifts.splice(index, 1);
+                localStorage.setItem('sasp_sud_shifts', JSON.stringify(shifts));
+                renderEmTable();
+                renderAgentHistory();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(seconds % 60).padStart(2, '0');
+            document.getElementById('main-timer').innerText = `${hrs}:${mins}:${secs}`;
+        }
+
+        function startService() {
+            if (!isRunning) {
+                const name = document.getElementById('agent-name').value;
+                const mat = document.getElementById('agent-matricule').value;
+                if (!name || !mat) {
+                    alert("Veuillez renseigner votre Nom et votre Matricule avant de prendre le service.");
+                    return;
+                }
+
+                isRunning = true;
+                startTime = new Date();
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimerDisplay();
+                }, 1000);
+
+                const badge = document.getElementById('global-badge');
+                badge.innerText = "EN SERVICE (10-8)";
+                badge.className = "badge-status status-on";
+            }
+        }
+
+        function pauseService() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                const badge = document.getElementById('global-badge');
+                badge.innerText = "PAUSE (10-6)";
+                badge.className = "badge-status status-pause";
+            }
+        }
+
+        function stopService() {
+            if (seconds > 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                const endTime = new Date();
+
+                const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+                const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+                const durationFormatted = `${hrs}h ${mins}m`;
+
+                const newShift = {
+                    date: startTime ? startTime.toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR'),
+                    agent: document.getElementById('agent-name').value,
+                    matricule: document.getElementById('agent-matricule').value,
+                    grade: document.getElementById('agent-grade').value,
+                    unit: document.getElementById('unit-type').value,
+                    partner: document.getElementById('unit-partner').value || 'Aucun',
+                    start: startTime ? startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) : '----',
+                    end: endTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}),
+                    durationSeconds: seconds,
+                    durationFormatted: durationFormatted
+                };
+
+                saveShift(newShift);
+                renderAgentHistory();
+
+                seconds = 0;
+                updateTimerDisplay();
+
+                const badge = document.getElementById('global-badge');
+                badge.innerText = "HORS SERVICE (10-10)";
+                badge.className = "badge-status status-off";
+
+                alert("Fin de service enregistrée avec succès dans la base SASP Sud !");
+            }
+        }
+
+        function generateDiscordReport() {
+            const name = document.getElementById('agent-name').value || 'Non renseigné';
+            const mat = document.getElementById('agent-matricule').value || '---';
+            const grade = document.getElementById('agent-grade').value;
+            const unit = document.getElementById('unit-type').value;
+            const partner = document.getElementById('unit-partner').value || 'Aucun';
+            const duration = document.getElementById('main-timer').innerText;
+            const notes = document.getElementById('service-notes').value || 'Rien à signaler';
+
+            const text = `▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n# 📜 COMPTE-RENDU DE SERVICE — SASP SUD\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n• **Officier :** ${name}\n• **Matricule :** #${mat}\n• **Grade :** ${grade}\n• **Unité :** ${unit}\n• **Coéquipier(s) :** ${partner}\n• **Temps de Service :** ${duration}\n• **Notes / Bilan :** ${notes}\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬`;
+
+            document.getElementById('discord-output').value = text;
+        }
+
+        function copyDiscordReport() {
+            const area = document.getElementById('discord-output');
+            if (area.value) {
+                area.select();
+                document.execCommand('copy');
+                alert("Rapport copié dans le presse-papier !");
+            } else {
+                alert("Veuillez d'abord générer le rapport.");
+            }
+        }
+
+        function renderAgentHistory() {
+            const shifts = getShifts();
+            const tbody = document.getElementById('agent-history-tbody');
+            tbody.innerHTML = '';
+
+            shifts.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${s.date}</td>
+                    <td><b>${s.agent}</b> (#${s.matricule})</td>
+                    <td><span style="color: var(--accent-gold);">${s.unit}</span></td>
+                    <td>${s.start}</td>
+                    <td>${s.end}</td>
+                    <td><b>${s.durationFormatted}</b></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function checkEmPassword() {
+            const pass = document.getElementById('em-pass').value;
+            if (pass === "1904") {
+                document.getElementById('em-login-view').style.display = 'none';
+                document.getElementById('em-dashboard-view').style.display = 'block';
+                renderEmTable();
+            } else {
+                document.getElementById('em-login-error').style.display = 'block';
+            }
+        }
+
+        function logoutEm() {
+            document.getElementById('em-pass').value = '';
+            document.getElementById('em-login-view').style.display = 'block';
+            document.getElementById('em-dashboard-view').style.display = 'none';
+            document.getElementById('em-login-error').style.display = 'none';
+        }
+
+        function renderEmTable() {
+            const shifts = getShifts();
+            const filterText = document.getElementById('filter-agent').value.toLowerCase();
+            const filterUnit = document.getElementById('filter-unit').value;
+            
+            const tbody = document.getElementById('em-history-tbody');
+            tbody.innerHTML = '';
+
+            let totalSecs = 0;
+            let uniqueAgents = new Set();
+            let count = 0;
+
+            shifts.forEach((s, idx) => {
+                const matchText = s.agent.toLowerCase().includes(filterText) || s.matricule.toLowerCase().includes(filterText);
+                const matchUnit = filterUnit === 'ALL' || s.unit === filterUnit;
+
+                if (matchText && matchUnit) {
+                    count++;
+                    totalSecs += (s.durationSeconds || 0);
+                    uniqueAgents.add(s.matricule);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${s.date}</td>
+                        <td><b>${s.agent}</b> (#${s.matricule})</td>
+                        <td>${s.grade}</td>
+                        <td><span style="color: var(--accent-gold);">${s.unit}</span></td>
+                        <td>${s.start} - ${s.end}</td>
+                        <td><b>${s.durationFormatted}</b></td>
+                        <td><button class="btn btn-red" style="padding: 3px 8px; font-size: 11px;" onclick="deleteShift(${idx})">Supprimer</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            document.getElementById('stat-total-shifts').innerText = count;
+            const h = Math.floor(totalSecs / 3600);
+            const m = Math.floor((totalSecs % 3600) / 60);
+            document.getElementById('stat-total-hours').innerText = `${h}h ${m}m`;
+            document.getElementById('stat-total-agents').innerText = uniqueAgents.size;
+        }
+
+        function exportCSV() {
+            const shifts = getShifts();
+            if (shifts.length === 0) {
+                alert("Aucun enregistrement à exporter.");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,Date,Agent,Matricule,Grade,Unite,Debut,Fin,Duree\n";
+            shifts.forEach(s => {
+                csvContent += `"${s.date}","${s.agent}","${s.matricule}","${s.grade}","${s.unit}","${s.start}","${s.end}","${s.durationFormatted}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Historique_Service_SASP_SUD_${new Date().toLocaleDateString('fr-FR')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (tabId === 'history-tab') {
+                renderAgentHistory();
+            }
+        }
+
+        renderAgentHistory();
+    </script>
+</body>
+</html>
